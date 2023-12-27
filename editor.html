@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editor</title>
+    <link rel="stylesheet" href="editor.css">
+</head>
+
+<body>
+    <div class="mdiv">
+        <div class="text">
+            <h1 class="abb" align="center" style="color: red;">Text Editor..</h1>
+            <div>
+                <form>
+                    <textarea rows="10" align="center" cols="60" placeholder="Enter The Text " id="txt"
+                        onkeypress="updateInfo()" autofocus></textarea>
+                    <br><br>
+                    <button type="button" onclick="upperCase()">UPPERCASE</button>
+                    <button type="button" onclick="lowerCase()">LOWERCASE</button>
+                    <button type="button" onclick="bold()">BOLD</button>
+                    <button type="button" onclick="search()">SEARCH</button>
+                    <button type="button" onclick="alignRight()">ALIGN RIGHT</button> <br> <br>
+                    <button type="button" onclick="alignCenter()">ALIGN CENTRE</button>
+                    <button type="button" onclick="color()">Color</button>
+                    <button type="button" onclick="findReplace()">FIND/REPLACE</button> 
+                    <button type="button" onclick="saveText()">SAVE</button> 
+                    <button type="button" onclick="loadText()">LOAD</button>
+                    <button type="button" onclick="undo()">Undo</button> <br> <br>
+                    <button type="button" onclick="cutText()">Cut</button>
+                    <button type="button" onclick="copyText()">Copy</button>
+                    <button type="button" onclick="pasteText()">Paste</button>
+                
+                    <select class="Fontt" name="" id="fontFamilySelect" onchange="fontFamily()">
+                        <option value="" disabled selected>FONT FAMILY</option>
+                        <option value="cursive">CURSIVE</option>
+                        <option value="sans-serif">SANS SERIF</option>
+                        <option value="Times New Roman">TIMES NEW ROMAN</option>
+                        <option value="fantasy">FANTASY</option>
+                        <option value="monospace">MONOSPACE</option>
+                    </select>
+
+                    <select name="" id="colorToChoose" onchange="colorr()">
+                        <option value="" disabled selected>TEXT COLOR</option>
+                        <option value="red">Red</option>
+                        <option value="green">GREEN</option>
+                        <option value="blue">BLUE</option>
+                        <option value="green">GREEN</option>
+                        <option value="yellow">YELLOW</option>
+                        <option value="black">BLACK</option>
+                    </select>
+
+                    
+
+
+                    <br><br>
+                    <h3 style="background-color:wheat; color: blue;" id="info">The Text Contains  0 And Word Is 0
+                        Character</h3>
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+    <script>
+        let txt = document.getElementById("txt");
+        let info = document.getElementById("info");
+        function upperCase() {
+            txt.value = txt.value.toUpperCase();
+        }
+        function lowerCase() {
+            txt.value = txt.value.toLowerCase();
+        }
+        function bold() {
+            txt.style.fontWeight = "bolder"
+        }
+        function alignRight() {
+            txt.style.textAlign = "Right";
+        }
+        function updateInfo() {
+            let text = txt.value;
+            info.innerHTML = `The Text Contains ${text.split(' ').length} Word And Is ${text.length} Character`
+        }
+        function search() {
+            let str = prompt("Enter The Word And Check It Is Present Or Not");
+            let text = txt.value;
+            if (text.includes(str)) {
+                alert(`yes ${str} is Present in Text`);
+
+            }
+            else {
+                alert(`${str} IS Not Present`)
+
+
+            }
+        }
+        function alignCenter() {
+            txt.style.textAlign = "Center";
+        }
+        function Italic() {
+            txt.style.textAlign = "italic";
+        }
+
+        function UnderLine() {
+            txt.style.textAlign = "UnderLine";
+        }
+
+        function color() {
+            txt.style.color = "red";
+        }
+
+        // find replace 
+        function findReplace() {
+            let findStr = prompt('Enter text to find');
+            let replaceStr = prompt('Enter text to replace');
+            let text = txt.value;
+            let newText = text.replace(new RegExp(findStr, 'g'), replaceStr);
+            if (newText !== text) {
+                txt.value = newText;
+                updateInfo();
+                alert('Text replaced successfully.');
+            } else {
+                alert('Text not found.');
+            }
+        }
+
+        // font 
+
+        function fontFamily() {
+            let fontSelect = fontFamilySelect.value;
+            txt.style.fontFamily = fontSelect;
+            updateInfo();
+        }
+
+        // save and load 
+
+
+        function saveText() {
+            localStorage.setItem('savedText', txt.value);
+            alert('Text saved successfully.');
+        }
+
+        function loadText() {
+            let savedText = localStorage.getItem('savedText');
+            if (savedText) {
+                txt.value = savedText;
+                updateInfo();
+                alert('Text loaded successfully.');
+            } else {
+                alert('No saved text found.');
+            }
+        }
+
+        // color 
+
+        function colorr()
+        {
+            let colorSelect = colorChange.value ;
+            txt.style.color = colorSelect ;
+            updateInfo() ;
+        }
+
+        // new 
+
+        function undo() {
+            if (changesCounter > 0) {
+                txt.value = txt.value.split('\n').slice(0, -1).join('\n');
+                changesCounter--;
+                updateInfo();
+            }
+        }
+
+        function cutText() {
+            document.execCommand("cut");
+            updateInfo();
+        }
+
+        function copyText() {
+            document.execCommand("copy");
+            updateInfo();
+        }
+
+        function pasteText() {
+            navigator.clipboard.readText()
+                .then((text) => {
+                    document.execCommand("insertText", false, text);
+                    updateInfo();
+                })
+                .catch((err) => {
+                    console.error('Unable to paste: ', err);
+                });
+        }
+
+
+
+    </script>
+
+</body>
+
+</html>
